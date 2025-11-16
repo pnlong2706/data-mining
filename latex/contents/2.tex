@@ -1,2 +1,365 @@
 \section{Khảo sát và tiền xử lý dữ liệu}
 
+\subsection{Tổng quan dữ liệu}
+\hspace{0.5cm}Bộ dữ liệu train có 2,999 mẫu với 21 cột (20 features và 1 target). Sau khi check sơ bộ thì nhóm thấy:
+
+\begin{itemize}
+    \item \textbf{Không có missing data:} May mắn là tất cả các cột đều đầy đủ giá trị
+    \item \textbf{Dấu phân cách:} File dùng dấu chấm phẩy (;) chứ không phải dấu phẩy như thường lệ
+    \item \textbf{Kiểu dữ liệu:} Có cả số (int64, float64) và chữ (object)
+\end{itemize}
+
+\subsection{Biến mục tiêu - vấn đề mất cân bằng}
+\hspace{0.5cm}Biến \texttt{y} (có đăng ký hay không) bị lệch rất nhiều:
+
+\begin{itemize}
+    \item \texttt{no}: 2,668 người (88.96\%)
+    \item \texttt{yes}: 331 người (11.04\%)
+    \item Tỷ lệ: 8.06:1 (no nhiều gấp 8 lần yes)
+\end{itemize}
+
+\noindent Dữ liệu mất cân bằng kiểu này cần xử lý bằng SMOTE, nếu không model sẽ thiên về predict toàn "no".
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{images/target_distribution.png}
+    \caption{Phân phối biến mục tiêu - mất cân bằng nghiêm trọng (8:1)}
+    \label{fig:target_dist}
+\end{figure}
+
+\subsection{Các biến phân loại quan trọng}
+
+\subsubsection{Nghề nghiệp (job)}
+\hspace{0.5cm}Nhóm phát hiện ra nghề nghiệp ảnh hưởng khá nhiều đến việc đăng ký:
+
+\begin{itemize}
+    \item \textbf{Top 3 đăng ký nhiều nhất:}
+    \begin{itemize}
+        \item Retired (về hưu): 22.88\%
+        \item Student (sinh viên): 20.69\%
+        \item Unemployed (thất nghiệp): 16.47\%
+    \end{itemize}
+    \item \textbf{Đăng ký ít:} Blue-collar (7.76\%), self-employed (6.14\%)
+    \item Người về hưu và sinh viên có tỷ lệ đăng ký cao gấp đôi mức trung bình
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/job_subscription_rate.png}
+    \caption{Tỷ lệ đăng ký theo nghề nghiệp - retired và student cao nhất}
+    \label{fig:job_rate}
+\end{figure}
+
+\subsubsection{Kênh liên hệ (contact)}
+\hspace{0.5cm}Gọi điện thoại di động có vẻ tốt hơn gọi bàn:
+
+\begin{itemize}
+    \item \textbf{Cellular}: 14.01\% đăng ký
+    \item \textbf{Telephone}: 5.64\% 
+    \item Cellular hiệu quả hơn \textbf{2.48 lần}
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/contact_comparison.png}
+    \caption{So sánh hiệu quả giữa cellular và telephone}
+    \label{fig:contact}
+\end{figure}
+
+\subsubsection{Tháng liên hệ (month)}
+\hspace{0.5cm}Tháng gọi cũng có mức độ ảnh hưởng khá lớn:
+
+\begin{itemize}
+    \item \textbf{Tháng tốt:} March (51.72\%), December (50\%), September (38\%), October (34.62\%)
+    \item \textbf{Tháng trung bình:} April (15.89\%), June (13.58\%)
+    \item \textbf{Tháng tệ:} May (6.64\%), July (9.73\%), August (9.76\%)
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/month_performance.png}
+    \caption{Hiệu quả theo từng tháng - tháng 3, 9, 12 tốt nhất}
+    \label{fig:month}
+\end{figure}
+
+\subsubsection{Kết quả lần gọi trước (poutcome)}
+\hspace{0.5cm}Đây là biến rất quan trọng:
+
+\begin{itemize}
+    \item \textbf{Success} (lần trước thành công): 65.35\% đăng ký tiếp
+    \item \textbf{Failure} (lần trước thất bại): 14.80\%
+    \item \textbf{Nonexistent} (chưa gọi bao giờ): 8.41\%
+    \item Khách đã thành công trước có tỷ lệ đăng ký cao gấp gần 8 lần so với khách mới
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{images/previous_outcome.png}
+    \caption{Impact của kết quả chiến dịch trước - success rate 65\%}
+    \label{fig:poutcome}
+\end{figure}
+
+\subsubsection{Giá trị 'unknown'}
+\hspace{0.5cm}Một số cột có giá trị 'unknown':
+
+\begin{itemize}
+    \item \texttt{default}: 596 người (19.87\%)
+    \item \texttt{education}: 138 người (4.60\%)
+    \item \texttt{housing}, \texttt{loan}: 77 người (2.57\%)
+    \item \textbf{Xử lý:} Giữ nguyên 'unknown' như 1 category riêng
+\end{itemize}
+
+\subsection{Các biến số}
+
+\subsubsection{Tuổi (age)}
+\hspace{0.5cm}Tuổi cũng ảnh hưởng khá nhiều:
+
+\begin{itemize}
+    \item Trung bình: 39.9 tuổi, trung vị: 38.0 tuổi
+    \item \textbf{Chia theo nhóm tuổi:}
+    \begin{itemize}
+        \item 18-25: 9.92\%
+        \item 25-35: 10.77\%
+        \item 35-45: 9.38\%
+        \item 45-55: 10.73\%
+        \item 55-65: 14.73\%
+        \item \textbf{65+}: 47.06\%
+    \end{itemize}
+    \item Người già (65+) có tỷ lệ đăng ký cao gấp gần 5 lần mức trung bình
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/age_groups.png}
+    \caption{Tỷ lệ đăng ký theo nhóm tuổi - 65+ cao nhất (47\%)}
+    \label{fig:age}
+\end{figure}
+
+\subsubsection{Số lần gọi trong chiến dịch (campaign)}
+\hspace{0.5cm}Số lần gọi càng nhiều thì tỷ lệ càng giảm:
+
+\begin{itemize}
+    \item \textbf{Lần 1}: 12.85\%
+    \item \textbf{Lần 2}: 11.55\%
+    \item \textbf{Lần 3}: 11.00\%
+    \item \textbf{Lần 4}: 10.85\%
+    \item \textbf{Từ lần 5 trở đi}: giảm mạnh (dưới 7\%)
+    \item Gọi nhiều quá làm khách phiền, phản tác dụng
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{images/campaign_frequency.png}
+    \caption{Tỷ lệ đăng ký giảm dần theo số lần gọi - lần đầu tốt nhất}
+    \label{fig:campaign}
+\end{figure}
+
+\subsubsection{Thời lượng cuộc gọi (duration)}
+\hspace{0.5cm}Duration có tương quan mạnh với kết quả:
+
+\begin{itemize}
+    \item Trung bình (no): 216 giây
+    \item Trung bình (yes): 570 giây
+    \item Chênh lệch: 354 giây
+    \item \textbf{Vấn đề Data Leakage:} 
+    \begin{itemize}
+        \item Duration chỉ biết \textit{sau khi} gọi xong
+        \item Không thể biết trước khi gọi
+        \item \textbf{Quyết định:} Bỏ biến này để tránh data leakage
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Lịch sử liên hệ (pdays, previous)}
+\hspace{0.5cm}Khách cũ dễ đăng ký hơn khách mới rất nhiều:
+
+\begin{itemize}
+    \item \textbf{Chưa gọi bao giờ} (pdays=999): 9.00\% (2,888 người)
+    \item \textbf{Đã gọi trước đây} (pdays $\neq$ 999): 63.96\% (111 người)
+    \item Khách cũ có tỷ lệ thành công cao gấp \textbf{7.1 lần}
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{images/previous_contact.png}
+    \caption{Khách đã gọi trước đây có tỷ lệ đăng ký cao gấp 3 lần}
+    \label{fig:prev_contact}
+\end{figure}
+
+\subsection{Tương quan giữa các biến}
+
+\subsubsection{Tương quan với target}
+\hspace{0.5cm}Top 5 biến số có tương quan mạnh nhất (bỏ duration):
+
+\begin{enumerate}
+    \item \texttt{previous}: +0.2611 (tương quan dương)
+    \item \texttt{age}: +0.0596
+    \item \texttt{cons.conf.idx}: +0.0470
+    \item \texttt{cons.price.idx}: -0.0565
+    \item \texttt{campaign}: -0.0842
+\end{enumerate}
+
+\noindent Các biến kinh tế có tương quan âm mạnh:
+\begin{itemize}
+    \item \texttt{nr.employed}: -0.3237
+    \item \texttt{pdays}: -0.3312 (không liên hệ gần đây)
+    \item \texttt{euribor3m}: -0.2679
+    \item \texttt{emp.var.rate}: -0.2496
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/correlation_heatmap.png}
+    \caption{Tương quan các biến số với biến mục tiêu}
+    \label{fig:corr}
+\end{figure}
+
+\subsubsection{Vấn đề multicollinearity}
+\hspace{0.5cm}Các biến kinh tế tương quan với nhau quá cao (>0.7):
+
+\begin{itemize}
+    \item \texttt{emp.var.rate} $\leftrightarrow$ \texttt{euribor3m}: 0.970
+    \item \texttt{euribor3m} $\leftrightarrow$ \texttt{nr.employed}: 0.940
+    \item \texttt{emp.var.rate} $\leftrightarrow$ \texttt{nr.employed}: 0.892
+    \item \texttt{emp.var.rate} $\leftrightarrow$ \texttt{cons.price.idx}: 0.746
+\end{itemize}
+
+\noindent \textbf{Giải pháp:} Bỏ 3 biến (\texttt{emp.var.rate}, \texttt{cons.price.idx}, \texttt{cons.conf.idx}), chỉ giữ \texttt{euribor3m} và \texttt{nr.employed}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{images/economic_multicollinearity.png}
+    \caption{Ma trận tương quan các biến kinh tế - multicollinearity cao}
+    \label{fig:econ}
+\end{figure}
+
+\subsection{Tổng kết phần khảo sát}
+
+\hspace{0.5cm}Sau khi phân tích kỹ, nhóm rút ra được:
+
+\begin{enumerate}
+    \item \textbf{Features quan trọng:} poutcome (kết quả lần trước), pdays, previous
+    \item \textbf{Khách hàng tiềm năng:} Người già (65+), về hưu, sinh viên
+    \item \textbf{Cách liên hệ tốt:} Dùng cellular, gọi tháng 3/9/12, không gọi quá nhiều lần
+    \item \textbf{Cần xử lý:} Dữ liệu mất cân bằng (8:1), data leakage (duration), multicollinearity (biến kinh tế)
+\end{enumerate}
+
+\subsection{Tiền xử lý dữ liệu}
+
+\hspace{0.5cm}Dựa vào những gì phân tích được, nhóm làm các bước sau:
+
+\subsubsection{Bước 1: Bỏ biến gây data leakage}
+\begin{itemize}
+    \item Bỏ \texttt{duration} vì chỉ biết sau khi gọi xong
+\end{itemize}
+
+\subsubsection{Bước 2: Xử lý multicollinearity}
+\begin{itemize}
+    \item Bỏ 3 biến kinh tế: \texttt{emp.var.rate}, \texttt{cons.price.idx}, \texttt{cons.conf.idx}
+    \item Giữ lại: \texttt{euribor3m}, \texttt{nr.employed}
+\end{itemize}
+
+\subsubsection{Bước 3: Tạo features mới}
+\begin{itemize}
+    \item \textbf{Nhóm tuổi:} Chia \texttt{age} thành 6 nhóm [18-25, 25-35, 35-45, 45-55, 55-65, 65+]
+    \item \textbf{Log transform:} Dùng log1p cho \texttt{campaign} và \texttt{previous} để giảm skewness
+\end{itemize}
+
+\subsubsection{Bước 4: Encode categorical features}
+\hspace{0.5cm}Nhóm dùng cách encode kết hợp:
+
+\begin{itemize}
+    \item \textbf{One-Hot Encoding} cho 4 biến quan trọng:
+    \begin{itemize}
+        \item \texttt{poutcome}: failure, nonexistent, success
+        \item \texttt{contact}: cellular, telephone
+        \item \texttt{month}: jan, feb, ..., dec
+        \item \texttt{age\_group}: 18-25, 25-35, ..., 65+
+        \item → Tạo ra 20 cột
+    \end{itemize}
+    
+    \item \textbf{Label Encoding} cho 7 biến còn lại:
+    \begin{itemize}
+        \item \texttt{job}, \texttt{marital}, \texttt{education}, \texttt{default}, \texttt{housing}, \texttt{loan}, \texttt{day\_of\_week}
+        \item → 7 cột
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Bước 5: Encode target}
+\begin{itemize}
+    \item Đổi \texttt{y} từ ['yes', 'no'] sang [1, 0]
+\end{itemize}
+
+\subsubsection{Kết quả}
+\hspace{0.5cm}Sau khi xử lý xong:
+
+\begin{itemize}
+    \item \textbf{Tổng cộng 36 features:}
+    \begin{itemize}
+        \item 20 cột từ one-hot
+        \item 7 cột từ label encoding
+        \item 6 cột số gốc: age, campaign, pdays, previous, euribor3m, nr.employed
+        \item 2 cột mới: campaign\_log, previous\_log
+    \end{itemize}
+    \item \textbf{Shape:} (2999, 37) kể cả target
+\end{itemize}
+
+\subsection{Chuẩn bị dữ liệu cho model}
+
+\subsubsection{Chia train-test}
+\begin{itemize}
+    \item Train: 80\% (2,399 mẫu)
+    \item Test: 20\% (600 mẫu)
+    \item Dùng \texttt{stratify=Y} để tỷ lệ yes/no đều nhau ở 2 tập
+\end{itemize}
+
+\subsubsection{Chuẩn hóa (Standardization)}
+\begin{itemize}
+    \item Dùng \texttt{StandardScaler} đưa tất cả features về cùng scale (mean=0, std=1)
+    \item Cần thiết vì một số model (KNN, SVM, Neural Network) nhạy cảm với scale
+    \item Fit trên train, rồi transform cả train và test
+\end{itemize}
+
+\subsubsection{Xử lý imbalance với SMOTE}
+\hspace{0.5cm}Dùng SMOTE chỉ cho training set:
+
+\begin{itemize}
+    \item \textbf{Trước SMOTE:}
+    \begin{itemize}
+        \item Class 0 (no): 2,134 mẫu (89\%)
+        \item Class 1 (yes): 265 mẫu (11\%)
+    \end{itemize}
+    
+    \item \textbf{Sau SMOTE:}
+    \begin{itemize}
+        \item Class 0 (no): 2,134 mẫu (50\%)
+        \item Class 1 (yes): 2,134 mẫu (50\%)
+        \item Tổng: 4,268 mẫu
+    \end{itemize}
+    
+    \item \textbf{Tại sao chỉ SMOTE train:} 
+    \begin{itemize}
+        \item Test phải giữ nguyên phân phối thực để đánh giá đúng
+        \item SMOTE tạo thêm mẫu giả cho class thiểu số
+    \end{itemize}
+\end{itemize}
+
+\subsection{Tổng kết}
+
+\hspace{0.5cm}Tóm lại quy trình của nhóm:
+
+\begin{enumerate}
+    \item Bỏ duration (data leakage) và 3 biến kinh tế (multicollinearity)
+    \item Tạo features mới: age\_group, log transform cho campaign và previous
+    \item Encode: One-hot cho 4 biến quan trọng, Label cho 7 biến còn lại
+    \item Chia train-test 80-20
+    \item StandardScaler chuẩn hóa
+    \item SMOTE cân bằng train set
+\end{enumerate}
+
+\noindent \textbf{Kết quả cuối:}
+\begin{itemize}
+    \item 36 features sạch sẽ
+    \item Train set cân bằng (4,268 mẫu)
+    \item Test set giữ nguyên (600 mẫu)
+\end{itemize}
+
