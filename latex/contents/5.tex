@@ -1,0 +1,29 @@
+\section{Kết luận và hướng phát triển}
+\subsection{Kết luận}
+\hspace{0.5cm} Trong bài tập lớn này, nhóm đã xây dựng một quy trình khai phá dữ liệu hoàn chỉnh cho bài toán dự đoán khả năng khách hàng đăng ký tiền gửi có kỳ hạn dựa trên bộ dữ liệu marketing của ngân hàng. Quy trình bao gồm các bước: khảo sát và tiền xử lý dữ liệu, xây dựng nhiều mô hình học máy khác nhau và cuối cùng là đánh giá, so sánh hiệu quả của các mô hình trên cùng một tập dữ liệu.
+
+\hspace{0.5cm} Từ các kết quả thực nghiệm trình bày ở Phần 3, 4 và 5 có thể rút ra một số nhận xét chính như sau:
+\begin{itemize}
+    \item Các bước tiền xử lý (làm sạch dữ liệu, mã hoá biến phân loại, chuẩn hoá/chuẩn chỉnh dữ liệu, xử lý dữ liệu mất cân bằng, \dots) có ảnh hưởng rất lớn đến chất lượng dự đoán của mô hình. Việc xử lý đúng giúp mô hình ổn định hơn và cải thiện các chỉ số đánh giá.
+    
+    \item Những mô hình tuyến tính đơn giản (ví dụ như Logistic Regression) cho kết quả ổn định, dễ huấn luyện và dễ diễn giải, trong khi các mô hình phi tuyến phức tạp hơn (như cây quyết định, rừng ngẫu nhiên, SVM, \dots) có khả năng khai thác mối quan hệ phi tuyến giữa các biến, nhờ đó cải thiện hiệu suất dự đoán trong nhiều trường hợp.
+    
+    \item Các đặc trưng liên quan đến lịch sử liên hệ và cường độ chiến dịch marketing (thời lượng cuộc gọi, số lần liên hệ, kết quả các chiến dịch trước, \dots) thường mang nhiều thông tin hơn so với một số đặc trưng thông tin cá nhân, qua đó cho thấy tầm quan trọng của việc theo dõi hành vi tương tác của khách hàng.
+\end{itemize}
+\subsection{Hướng phát triển}
+
+\hspace{0.5cm} Trong phạm vi bài tập lớn, nhóm chỉ mới dừng lại ở một số mô hình cơ bản và cách tiền xử lý dữ liệu tương đối đơn giản. Dựa trên kết quả đạt được, nhóm đề xuất một số hướng phát triển trong tương lai:
+
+\begin{itemize}
+    \item Áp dụng các thuật toán mạnh hơn cho bài toán phân loại như LightGBM, CatBoost hoặc các mô hình mạng nơ-ron đơn giản để xem xét
+    khả năng cải thiện thêm hiệu suất dự đoán.
+
+    \item Xây dựng mô hình dựa trên dữ liệu theo thời gian thực. 
+
+    \item Tích hợp với các công nghệ mới như Apache Spark để xử lý dữ liệu lớn, Google BigQuery làm Data Warehouse... 
+
+    \item Triển khai mô hình: Xây dựng một API hoặc một giao diện web đơn giản cho phép nhập thông tin khách hàng và trả về xác suất đăng ký tiền gửi, qua đó mô phỏng bước đầu việc đưa mô hình
+    vào sử dụng trong môi trường thực tế.
+\end{itemize}
+
+\hspace{0.5cm} Thông qua dự án này, nhóm đã tích lũy được nhiều kinh nghiệm thực tiễn trong việc khảo sát, tiền xử lý dữ liệu, xây dựng và đánh giá mô hình học máy. Những kỹ năng này sẽ là nền tảng vững chắc cho các nghiên cứu và dự án sâu hơn trong lĩnh vực trí tuệ nhân tạo và khai thác dữ liệu.

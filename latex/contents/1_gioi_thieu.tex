@@ -1,0 +1,93 @@
+\section{Giới thiệu}
+
+\subsection{Bối cảnh nghiên cứu}
+\hspace{0.5cm} Trong bối cảnh ngân hàng bán lẻ cạnh tranh ngày càng gay gắt, các tổ chức tài chính phải liên tục triển khai các chiến dịch marketing trực tiếp (đặc biệt là telemarketing qua điện thoại) để giới thiệu sản phẩm tiền gửi có kỳ hạn cho khách hàng hiện hữu và khách hàng tiềm năng. Tuy nhiên, việc gọi điện “đại trà” cho toàn bộ danh sách khách hàng vừa tốn kém chi phí nhân sự, vừa gây phiền hà cho những khách hàng không có nhu cầu thực sự. Do đó, nhu cầu phân tích, xử lý dữ liệu, ứng dụng các mô hình học máy để dự đoán trước nhóm khách hàng có khả năng đăng ký tiền gửi có kỳ hạn là rất cấp thiết. 
+
+\subsection{Mục tiêu nghiên cứu}
+\hspace{0.5cm}Dự án này tập trung vào việc phân tích, xử lý dữ liệu, sử dụng các mô hình học máy để dự đoán biến mục tiêu \texttt{y} (khách hàng có đăng ký tiền gửi có kỳ hạn hay không, với hai giá trị \texttt{yes} và \texttt{no}) dựa trên tập dữ liệu \texttt{train.csv} của cuộc thi \textit{Marketing Dataset} trên Kaggle. Cụ thể, các mục tiêu chính bao gồm:
+
+\begin{itemize}
+    \item Phân tích, so sánh, khảo sát và tiền xử lý dữ liệu khách hàng từ tập \texttt{train.csv} (xử lý giá trị thiếu, mã hoá biến phân loại, chuẩn hoá/chuẩn chỉnh dữ liệu nếu cần)
+    \item Xây dựng và so sánh nhiều mô hình(Logistic Regression, KNN, SVM, Decision Tree, Random Forest, \dots)
+    \item Đánh giá hiệu suất của các mô hình dự đoán
+\end{itemize}
+
+\subsection{Bộ dữ liệu}
+\hspace{0.5cm} \textbf{Link Marketing dataset:} \url{https://www.kaggle.com/competitions/marketing-data/overview}
+
+\hspace{0.5cm} Bộ dữ liệu được sử dụng trong dự án này xuất phát từ các chiến dịch marketing trực tiếp qua điện thoại của một ngân hàng tại Bồ Đào Nha . Dữ liệu bao gồm:
+
+\begin{itemize}
+    % \item Thời gian thu thập: Trong giai đoạn 2008–2010
+    \item Số lượng mẫu: 3,000 mẫu
+    \item Số lượng biến: 21 biến (20 biến đầu vào và 1 biến mục tiêu \texttt{y})
+    \item \textbf{Biến mục tiêu:}
+    \begin{itemize}
+        \item \texttt{y}: Khách hàng có đăng ký tiền gửi có kỳ hạn hay không (\texttt{yes} / \texttt{no}) ?
+    \end{itemize}
+    \item \textbf{Nhóm biến đầu vào chính:}
+    \begin{itemize}
+        % \item Thông tin cá nhân của khách hàng:
+        % \begin{itemize}
+            \item \texttt{age}: tuổi khách hàng (số)
+            \item \texttt{job}: nghề nghiệp (admin., blue-collar, services, \dots)
+            \item \texttt{marital}: tình trạng hôn nhân (single, married, divorced)
+            \item \texttt{education}: trình độ học vấn (basic, high.school, university.degree, \dots)
+            \item \texttt{default}: có nợ xấu hay không (yes/no)
+            \item \texttt{housing}: có vay mua nhà hay không (yes/no)
+            \item \texttt{loan}: có vay tiêu dùng hay không (yes/no)
+        % \end{itemize}
+        
+        % \item Thông tin về lần liên hệ hiện tại trong chiến dịch:
+        % \begin{itemize}
+            \item \texttt{contact}: kênh liên hệ (cellular, telephone)
+            \item \texttt{month}: tháng liên hệ cuối cùng (jan, feb, \dots, dec)
+            \item \texttt{day\_of\_week}: ngày trong tuần liên hệ cuối cùng (mon, tue, \dots, fri)
+            \item \texttt{duration}: thời lượng cuộc gọi cuối cùng (giây)
+        % \end{itemize}
+        
+        % \item Thông tin về lịch sử và cường độ chiến dịch:
+        % \begin{itemize}
+            \item \texttt{campaign}: số lần liên hệ trong chiến dịch hiện tại với khách hàng này
+            \item \texttt{pdays}: số ngày kể từ lần liên hệ trước đó (999 nếu chưa từng liên hệ)
+            \item \texttt{previous}: số lần liên hệ trước chiến dịch hiện tại
+            \item \texttt{poutcome}: kết quả của chiến dịch marketing trước đó (success, failure, nonexistent)
+        % \end{itemize}
+        
+        % \item Các biến vĩ mô, bối cảnh kinh tế - xã hội:
+        % \begin{itemize}
+            \item \texttt{emp.var.rate}: tỷ lệ biến động việc làm (chỉ báo hàng quý)
+            \item \texttt{cons.price.idx}: chỉ số giá tiêu dùng (hàng tháng)
+            \item \texttt{cons.conf.idx}: chỉ số niềm tin người tiêu dùng (hàng tháng)
+            \item \texttt{euribor3m}: lãi suất Euribor 3 tháng (hàng ngày)
+            \item \texttt{nr.employed}: số lượng lao động (chỉ báo hàng quý)
+        % \end{itemize}
+    \end{itemize}
+    
+    % \item \textbf{Đặc điểm phân phối mục tiêu:}
+    % \begin{itemize}
+    %     \item Biến \texttt{y} mất cân bằng mạnh: phần lớn quan sát mang nhãn \texttt{``no''}, số lượng \texttt{``yes''} chiếm tỷ lệ nhỏ, điều này đặt ra bài toán xử lý dữ liệu mất cân bằng trong quá trình huấn luyện mô hình.
+    % \end{itemize}
+\end{itemize}
+
+
+
+\subsection{Ý nghĩa thực tiễn}
+\hspace{0.5cm}Nghiên cứu và mô hình hoá bộ dữ liệu marketing ngân hàng này có ý nghĩa thực tiễn quan trọng:
+
+\begin{itemize}
+    \item Giúp ngân hàng nhận diện tốt hơn nhóm khách hàng tiềm năng có khả năng đăng ký tiền gửi, từ đó tối ưu hoá danh sách gọi điện trong các chiến dịch telemarketing
+    \item Góp phần giảm chi phí chiến dịch (ít cuộc gọi lãng phí hơn), tăng tỷ lệ chuyển đổi, nâng cao hiệu quả sử dụng nguồn lực nhân viên
+    \item Cung cấp cơ sở dữ liệu định lượng để thiết kế chiến lược marketing cá nhân hoá, theo từng phân khúc khách hàng khác nhau
+\end{itemize}
+
+\subsection{Cấu trúc báo cáo}
+\hspace{0.5cm}Báo cáo được tổ chức thành các phần chính sau:
+
+\begin{itemize}
+    \item Phần 1: Giới thiệu đề tài và bài toán dự đoán
+    \item Phần 2: Khảo sát và tiền xử lý dữ liệu
+    \item Phần 3: Xây dựng các mô hình học máy
+    \item Phần 4: Đánh giá và so sánh mô hình
+    \item Phần 5: Kết luận và hướng phát triển
+\end{itemize}

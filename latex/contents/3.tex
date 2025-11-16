@@ -1,0 +1,480 @@
+\section{Xây dựng các mô hình học máy}
+Nhóm sử dụng 9 mô hình học máy sau để dự đoán cho bài toán đã giới thiệu ở trên:
+\begin{itemize}
+    \item KNN
+    \item Logistic Regression
+    \item SVM
+    \item Decision Tree
+    \item Random Forest
+    \item XGBoost
+    \item Gradient Boosting
+    \item Naivebayes
+    \item MLP
+\end{itemize}
+Các mô hình được đánh giá bởi các thông số sau:
+\begin{itemize}
+    \item Accuracy
+    \item Precision
+    \item Recall
+    \item F1-score
+    \item Confussion Matrix
+\end{itemize}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/ML.jpg}
+    \label{fig:enter-label}
+\end{figure}
+
+\newpage
+\subsection{Mô hình KNN}
+\subsubsection{Giới thiệu}
+\hspace{0.5cm} Mô hình K--Nearest Neighbors (KNN) là một thuật toán phân loại dựa trên ``láng giềng gần nhất''.
+Ý tưởng chính là, để dự đoán nhãn của một mẫu mới, mô hình sẽ tìm $k$ điểm dữ liệu gần nhất trong
+tập huấn luyện (theo một khoảng cách, thường dùng Euclid) và gán nhãn theo đa số phiếu của các láng giềng này.
+KNN là mô hình phi tham số, đơn giản, dễ cài đặt, nhưng có thể tốn thời gian khi dự đoán nếu số lượng mẫu lớn.
+\subsubsection{Kết quả huấn luyện mô hình}
+\hspace{0.5cm} Configuration: \{'n\_neighbors': 15, 'weights': 'distance', 'algorithm': 'auto', 'leaf\_size': 30, 'p': 1, 'metric': 'manhattan'\}
+
+\hspace{0.5cm} Kết quả trên tập test:
+\begin{itemize}
+    \item Accuracy : 0.7683
+    \item Precision: 0.8441
+    \item Recall   : 0.7683
+    \item F1-score : 0.7990
+\end{itemize}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lcccc}
+        \hline
+        & Precision & Recall & F1-score & Support \\
+        \hline
+        0       & 0.92 & 0.81 & 0.86 & 534 \\
+        1       & 0.22 & 0.44 & 0.29 & 66  \\
+        \hline
+        Accuracy      &      &      & 0.77 & 600 \\
+        Macro avg     & 0.57 & 0.62 & 0.58 & 600 \\
+        Weighted avg  & 0.84 & 0.77 & 0.80 & 600 \\
+        \hline
+    \end{tabular}
+    \caption{Detailed metrics per class}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/KNN_1.png}
+        \label{fig:label1}
+    \end{minipage}
+    \hspace{0.02\linewidth} % khoảng cách giữa 2 hình
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/KNN_2.png}
+        \label{fig:label2}
+    \end{minipage}
+    \caption{Confusion matrix of KNN}
+    \label{fig:combined}
+\end{figure}
+
+\newpage
+\subsection{Mô hình Logistic Regression}
+\subsubsection{Giới thiệu}
+\hspace{0.5cm} Logistic Regression là một mô hình tuyến tính dùng cho bài toán phân loại nhị phân. Mô hình giả định rằng logit (log odds) của xác suất thuộc lớp dương là một hàm tuyến tính của các biến đầu vào.
+Đầu ra của mô hình là xác suất thông qua hàm sigmoid, từ đó ta chọn ngưỡng (thường là 0.5) để phân loại. Ưu điểm của Logistic Regression là dễ huấn luyện, dễ diễn giải hệ số và thường cho kết quả ổn định trên nhiều bộ dữ liệu.
+\subsubsection{Kết quả huấn luyện mô hình}
+\hspace{0.5cm} Configuration: \{'penalty': 'l2', 'dual': False, 'tol': 0.0001, 'C': 15.0, 'solver': 'saga', 'max\_iter': 5000, 'class\_weight': 'balanced'\}
+
+\hspace{0.5cm} Kết quả trên tập test:
+\begin{itemize}
+    \item Accuracy : 0.7533
+    \item Precision: 0.8495
+    \item Recall   : 0.7533
+    \item F1-score : 0.7903
+\end{itemize}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lcccc}
+        \hline
+        & Precision & Recall & F1-score & Support \\
+        \hline
+        0     &  0.93   & 0.78  &  0.85   &   534 \\
+        1       & 0.22  &   0.50  &   0.31     &   66  \\
+        \hline
+        Accuracy      &      &      & 0.75 & 600 \\
+        Macro avg     & 0.57 & 0.64 & 0.58 & 600 \\
+        Weighted avg  & 0.85 & 0.75 & 0.79 & 600 \\
+        \hline
+    \end{tabular}
+    \caption{Detailed metrics per class}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/log_1.png}
+        \label{fig:label1}
+    \end{minipage}
+    \hspace{0.02\linewidth} % khoảng cách giữa 2 hình
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/log_2.png}
+        \label{fig:label2}
+    \end{minipage}
+    \caption{Confusion matrix of Logistic Regression}
+    \label{fig:combined}
+\end{figure}
+
+\subsection{Mô hình SVM}
+\subsubsection{Giới thiệu}
+\hspace{0.5cm} Support Vector Machine (SVM) là mô hình phân loại tìm một siêu phẳng (hyperplane) có khoảng cách biên (margin)
+lớn nhất để tách các lớp dữ liệu. Với hạt nhân (kernel), SVM có thể ánh xạ dữ liệu sang không gian đặc trưng
+chiều cao hơn để xử lý những bài toán không tuyến tính. SVM thường hoạt động tốt trên dữ liệu có số chiều vừa phải
+và phân tách tương đối rõ ràng giữa các lớp.
+\subsubsection{Kết quả huấn luyện mô hình}
+\hspace{0.5cm} Configuration: \{'C': 15.0, 'kernel': 'rbf', 'degree': 3, 'gamma': 'scale', 'coef0': 0.0, 'class\_weight': 'balanced', 'cache\_size': 1000\}
+
+\hspace{0.5cm} Kết quả trên tập test:
+\begin{itemize}
+    \item Accuracy : 0.8083
+    \item Precision: 0.8260
+    \item Recall   : 0.8083
+    \item F1-score : 0.8167
+\end{itemize}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lcccc}
+        \hline
+        & Precision & Recall & F1-score & Support \\
+        \hline
+        0     & 0.90    &  0.88   &   0.89   &   534 \\
+        1       & 0.20  &    0.24   &   0.22     &   66  \\
+        \hline
+        Accuracy      &      &      & 0.81 & 600 \\
+        Macro avg     & 0.55 & 0.56 & 0.55 & 600 \\
+        Weighted avg  & 0.83 & 0.81 & 0.82 & 600 \\
+        \hline
+    \end{tabular}
+    \caption{Detailed metrics per class}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/svm_1.png}
+        \label{fig:label1}
+    \end{minipage}
+    \hspace{0.02\linewidth} % khoảng cách giữa 2 hình
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/svm_2.png}
+        \label{fig:label2}
+    \end{minipage}
+    \caption{Confusion matrix of SVM}
+    \label{fig:combined}
+\end{figure}
+
+\newpage
+\subsection{Mô hình Decision Tree}
+\subsubsection{Giới thiệu}
+\hspace{0.5cm} Decision Tree là mô hình dự đoán dựa trên cấu trúc cây, trong đó mỗi nút trong cây là một điều kiện tách dữ liệu
+trên một thuộc tính, và mỗi lá cây tương ứng với một nhãn dự đoán. Mô hình được xây dựng bằng cách chọn những phép
+tách làm giảm độ hỗn loạn (entropy, Gini) nhiều nhất. Decision Tree dễ trực quan hoá và giải thích, nhưng dễ bị
+quá khớp (overfitting) nếu không được cắt tỉa (pruning) hoặc giới hạn độ sâu.
+\subsubsection{Kết quả huấn luyện mô hình}
+\hspace{0.5cm} Configuration: \{'criterion': 'gini', 'splitter': 'best', 'max\_depth': 35, 'min\_samples\_split': 2, 'min\_samples\_leaf': 1, 'max\_features': 'sqrt', 'class\_weight': 'balanced'\}
+
+\hspace{0.5cm} Kết quả trên tập test:
+\begin{itemize}
+    \item Accuracy : 0.7950
+    \item Precision: 0.8376
+    \item Recall   : 0.7950
+    \item F1-score : 0.8138
+\end{itemize}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lcccc}
+        \hline
+        & Precision & Recall & F1-score & Support \\
+        \hline
+        0     & 0.91   &   0.85   &   0.88   &   534 \\
+        1       & 0.22   &   0.35  &    0.27     &   66  \\
+        \hline
+        Accuracy      &      &      & 0.80 & 600 \\
+        Macro avg     & 0.57 & 0.60 & 0.58 & 600 \\
+        Weighted avg  & 0.84 & 0.80 & 0.81 & 600 \\
+        \hline
+    \end{tabular}
+    \caption{Detailed metrics per class}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/tree_1.png}
+        \label{fig:label1}
+    \end{minipage}
+    \hspace{0.02\linewidth} % khoảng cách giữa 2 hình
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/tree_2.png}
+        \label{fig:label2}
+    \end{minipage}
+    \caption{Confusion matrix of Decision Tree}
+    \label{fig:combined}
+\end{figure}
+
+\newpage
+\subsection{Mô hình Random Forest}
+\subsubsection{Giới thiệu}
+\hspace{0.5cm} Random Forest là một mô hình tập hợp (ensemble) của nhiều cây quyết định. Mỗi cây được huấn luyện trên một
+mẫu bootstrap của dữ liệu và tại mỗi nút chỉ xem xét một tập con ngẫu nhiên các thuộc tính khi tách.
+Dự đoán cuối cùng được lấy bằng cách bỏ phiếu đa số từ các cây thành phần. Nhờ cơ chế lấy trung bình qua nhiều cây,
+Random Forest thường giảm được hiện tượng overfitting và cho hiệu suất tốt, ổn định.
+\subsubsection{Kết quả huấn luyện mô hình}
+\hspace{0.5cm} Configuration: \{'n\_estimators': 1500, 'criterion': 'gini', 'max\_depth': 20, 'min\_samples\_split': 2, 'min\_samples\_leaf': 1, 'max\_features': 'sqrt', 'bootstrap': True, 'max\_samples': 0.9, 'class\_weight': 'balanced\_subsample'\}
+
+\hspace{0.5cm} Kết quả trên tập test:
+\begin{itemize}
+    \item Accuracy : 0.8817
+    \item Precision: 0.8602
+    \item Recall   : 0.8817
+    \item F1-score : 0.8679
+\end{itemize}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lcccc}
+        \hline
+        & Precision & Recall & F1-score & Support \\
+        \hline
+        0     & 0.91  &    0.96   &   0.94   &   534 \\
+        1       & 0.44   &   0.26   &   0.32     &   66  \\
+        \hline
+        Accuracy      &      &      & 0.88 & 600 \\
+        Macro avg     & 0.67 & 0.61 & 0.63 & 600 \\
+        Weighted avg  & 0.86 & 0.88 & 0.87 & 600 \\
+        \hline
+    \end{tabular}
+    \caption{Detailed metrics per class}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/rf_1.png}
+        \label{fig:label1}
+    \end{minipage}
+    \hspace{0.02\linewidth} % khoảng cách giữa 2 hình
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/rf_2.png}
+        \label{fig:label2}
+    \end{minipage}
+    \caption{Confusion matrix of Random Forest}
+    \label{fig:combined}
+\end{figure}
+
+\newpage
+\subsection{Mô hình XGBoost}
+\subsubsection{Giới thiệu}
+\hspace{0.5cm} XGBoost (Extreme Gradient Boosting) là một cài đặt tối ưu và mở rộng của thuật toán Gradient Boosting, tập trung vào hiệu năng tính toán và khả năng tổng quát hoá. Mô hình xây dựng dần dần một tập các cây quyết định nông, mỗi cây mới cố gắng sửa lỗi của mô hình hiện tại bằng cách tối thiểu hoá một hàm mất mát thông qua gradient. XGBoost hỗ trợ nhiều kỹ thuật regularization, xử lý giá trị thiếu và song song hoá, nên thường đạt kết quả rất tốt trong các bài toán thi trên Kaggle.
+\subsubsection{Kết quả huấn luyện mô hình}
+\hspace{0.5cm} Configuration: \{'n\_estimators': 1500, 'learning\_rate': 0.02, 'max\_depth': 15, 'verbosity': 1, 'subsample': 0.85, 'colsample\_bytree': 0.85, 'colsample\_bylevel': 0.9, 'gamma': 0.1, 'reg\_alpha': 0.05, 'reg\_lambda': 1.5, 'min\_child\_weight': 2, 'scale\_pos\_weight': 1\}
+
+\hspace{0.5cm} Kết quả trên tập test:
+\begin{itemize}
+    \item Accuracy : 0.8817
+    \item Precision: 0.8513
+    \item Recall   : 0.8817
+    \item F1-score : 0.8606
+\end{itemize}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lcccc}
+        \hline
+        & Precision & Recall & F1-score & Support \\
+        \hline
+        0     & 0.91   &   0.97   &   0.94   &   534 \\
+        1       & 0.41   &   0.18  &    0.25     &   66  \\
+        \hline
+        Accuracy      &      &      & 0.88 & 600 \\
+        Macro avg     & 0.66 & 0.57 & 0.59 & 600 \\
+        Weighted avg  & 0.85 & 0.88 & 0.86 & 600 \\
+        \hline
+    \end{tabular}
+    \caption{Detailed metrics per class}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/xg_1.png}
+        \label{fig:label1}
+    \end{minipage}
+    \hspace{0.02\linewidth} % khoảng cách giữa 2 hình
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/xg_2.png}
+        \label{fig:label2}
+    \end{minipage}
+    \caption{Confusion matrix of XGBoost}
+    \label{fig:combined}
+\end{figure}
+
+\newpage
+\subsection{Mô hình Gradient Boosting}
+\subsubsection{Giới thiệu}
+\hspace{0.5cm} Gradient Boosting là một phương pháp ensemble xây dựng mô hình một cách tuần tự, trong đó mỗi mô hình con (thường là cây quyết định nông) được huấn luyện để giảm dần sai số còn lại (residual) của tổ hợp các mô hình trước đó. Mô hình cuối cùng là tổng có trọng số của các mô hình con. Gradient Boosting có khả năng mô tả tốt các quan hệ phi tuyến, nhưng cần điều chỉnh siêu tham số cẩn thận (learning rate, số lượng cây, độ sâu cây, \dots) để tránh overfitting.
+\subsubsection{Kết quả huấn luyện mô hình}
+\hspace{0.5cm} Configuration: \{'loss': 'log\_loss', 'learning\_rate': 0.02, 'n\_estimators': 1500, 'subsample': 0.85, 'max\_depth': 15, 'min\_samples\_split': 2, 'min\_samples\_leaf': 1, 'max\_features': 'sqrt', 'validation\_fraction': 0.15, 'n\_iter\_no\_change': 30, 'tol': 1e-06\}
+
+\hspace{0.5cm} Kết quả trên tập test:
+\begin{itemize}
+    \item Accuracy : 0.8900
+    \item Precision: 0.8628
+    \item Recall   : 0.8900
+    \item F1-score : 0.8681
+\end{itemize}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lcccc}
+        \hline
+        & Precision & Recall & F1-score & Support \\
+        \hline
+        0     & 0.91  &    0.98   &   0.94   &   534 \\
+        1       & 0.50   &   0.20  &    0.28     &   66  \\
+        \hline
+        Accuracy      &      &      & 0.89 & 600 \\
+        Macro avg     & 0.70 & 0.59 & 0.61 & 600 \\
+        Weighted avg  & 0.86 & 0.89 & 0.87 & 600 \\
+        \hline
+    \end{tabular}
+    \caption{Detailed metrics per class}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/gr_1.png}
+        \label{fig:label1}
+    \end{minipage}
+    \hspace{0.02\linewidth} % khoảng cách giữa 2 hình
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/gr_2.png}
+        \label{fig:label2}
+    \end{minipage}
+    \caption{Confusion matrix of Gradient Boosting}
+    \label{fig:combined}
+\end{figure}
+
+\newpage
+\subsection{Mô hình Naive Bayes}
+\subsubsection{Giới thiệu}
+\hspace{0.5cm} Naive Bayes là họ mô hình xác suất dựa trên định lý Bayes, với giả định mạnh mẽ rằng các thuộc tính là độc lập với nhau khi đã biết nhãn lớp (giả định ``naive''). Mô hình ước lượng xác suất có điều kiện từ dữ liệu huấn luyện và suy ra xác suất hậu nghiệm cho từng lớp. Dù giả định đơn giản, Naive Bayes thường cho kết quả khá tốt,
+đặc biệt trên dữ liệu văn bản hoặc dữ liệu có số chiều cao, và có tốc độ huấn luyện, dự đoán rất nhanh.
+\subsubsection{Kết quả huấn luyện mô hình}
+
+\hspace{0.5cm} Kết quả trên tập test:
+\begin{itemize}
+    \item Accuracy : 0.8583
+    \item Precision: 0.8666
+    \item Recall   : 0.8583
+    \item F1-score : 0.8623
+\end{itemize}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lcccc}
+        \hline
+        & Precision & Recall & F1-score & Support \\
+        \hline
+        0     & 0.93   &   0.91  &    0.92   &   534 \\
+        1       & 0.37   &   0.42   &   0.40     &   66  \\
+        \hline
+        Accuracy      &      &      & 0.86 & 600 \\
+        Macro avg     & 0.65 & 0.67 & 0.66 & 600 \\
+        Weighted avg  & 0.87 & 0.86 & 0.86 & 600 \\
+        \hline
+    \end{tabular}
+    \caption{Detailed metrics per class}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/nv_1.png}
+        \label{fig:label1}
+    \end{minipage}
+    \hspace{0.02\linewidth} % khoảng cách giữa 2 hình
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/nv_2.png}
+        \label{fig:label2}
+    \end{minipage}
+    \caption{Confusion matrix of Naive Bayes}
+    \label{fig:combined}
+\end{figure}
+
+\newpage
+\subsection{Mô hình MLP}
+\subsubsection{Giới thiệu}
+\hspace{0.5cm} Multilayer Perceptron (MLP) là một dạng mạng nơ-ron truyền thẳng (feedforward neural network) gồm một lớp vào, một hoặc nhiều lớp ẩn và một lớp đầu ra. Mỗi lớp gồm nhiều nút (neuron) kết nối đầy đủ với lớp tiếp theo, dùng các hàm kích hoạt phi tuyến (ReLU, sigmoid, \dots) để học các quan hệ phức tạp giữa đầu vào và đầu ra.
+MLP có khả năng biểu diễn mạnh, nhưng cần số lượng dữ liệu đủ lớn, kỹ thuật regularization và tối ưu siêu tham số để đạt hiệu quả cao và tránh overfitting.
+\subsubsection{Kết quả huấn luyện mô hình}
+\hspace{0.5cm} Configuration: \{'hidden\_layer\_sizes': (300, 200, 100), 'activation': 'relu', 'solver': 'adam', 'max\_iter': 5000, 'alpha': 0.0001, 'learning\_rate': 'adaptive', 'early\_stopping': True, 'validation\_fraction': 0.2, 'n\_iter\_no\_change': 30, 'batch\_size': 64\}
+
+\hspace{0.5cm} Kết quả trên tập test:
+\begin{itemize}
+    \item Accuracy : 0.8417
+    \item Precision: 0.8406
+    \item Recall   : 0.8417
+    \item F1-score : 0.8411
+\end{itemize}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lcccc}
+        \hline
+        & Precision & Recall & F1-score & Support \\
+        \hline
+        0     & 0.91   &   0.91   &   0.91   &   534 \\
+        1       & 0.28   &   0.27   &   0.27     &   66  \\
+        \hline
+        Accuracy      &      &      & 0.84 & 600 \\
+        Macro avg     & 0.59 & 0.59 & 0.59 & 600 \\
+        Weighted avg  & 0.84 & 0.84 & 0.84 & 600 \\
+        \hline
+    \end{tabular}
+    \caption{Detailed metrics per class}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/mlp_1.png}
+        \label{fig:label1}
+    \end{minipage}
+    \hspace{0.02\linewidth} % khoảng cách giữa 2 hình
+    \begin{minipage}[b]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/mlp_2.png}
+        \label{fig:label2}
+    \end{minipage}
+    \caption{Confusion matrix of Multilayer Perceptron}
+    \label{fig:combined}
+\end{figure}

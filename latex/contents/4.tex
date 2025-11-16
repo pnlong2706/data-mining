@@ -1,0 +1,28 @@
+\section{Đánh giá và so sánh mô hình}
+\begin{table}[H]
+    \centering
+    
+    \begin{tabular}{lccccc}
+        \hline
+        Model           & Accuracy & Precision & Recall  & F1-Score & N\_Features \\
+        \hline
+        GRADIENTBOOSTING & 0.890000 & 0.862822 & 0.890000 & 0.868073 & 36 \\
+        RANDOMFOREST     & 0.881667 & 0.860213 & 0.881667 & 0.867911 & 36 \\
+        XGBOOST          & 0.881667 & 0.851349 & 0.881667 & 0.860604 & 36 \\
+        NAIVEBAYES       & 0.858333 & 0.866648 & 0.858333 & 0.862253 & 36 \\
+        MLP              & 0.841667 & 0.840611 & 0.841667 & 0.841136 & 36 \\
+        SVM              & 0.808333 & 0.825987 & 0.808333 & 0.816747 & 36 \\
+        DECISIONTREE     & 0.795000 & 0.837561 & 0.795000 & 0.813762 & 36 \\
+        KNN              & 0.768333 & 0.844138 & 0.768333 & 0.799046 & 36 \\
+        LOGREG           & 0.753333 & 0.849549 & 0.753333 & 0.790335 & 36 \\
+        \hline
+    \end{tabular}
+    \caption{So sánh hiệu quả các mô hình học máy}
+\end{table}
+
+\hspace{0.5cm} Dựa trên Bảng trên, có thể thấy nhóm mô hình \textbf{ensemble dựa trên cây} cho hiệu quả tốt nhất. Mô hình \textbf{Gradient Boosting} đạt Accuracy cao nhất (xấp xỉ $0.89$), đồng thời có Precision, Recall và F1-score đều ở mức cao, nên được xem là mô hình toàn diện nhất. Tiếp theo là \textbf{Random Forest} và \textbf{XGBoost} với Accuracy khoảng 0.88 và F1-score đều trên 0.86, cho thấy ba mô hình ensemble này đều học tốt các quan hệ phi tuyến và tương tác phức tạp giữa các đặc trưng.
+
+\hspace{0.5cm} Nhóm mô hình \textbf{Naive Bayes} và \textbf{MLP} cho kết quả khá, với Accuracy trong khoảng $0.84$ đến $0.86$ và F1-score ở mức ổn định. Các mô hình còn lại như \textbf{SVM}, \textbf{Decision Tree}, \textbf{KNN} và \textbf{Logistic Regression} có Accuracy và F1-score thấp hơn,
+trong đó Logistic Regression đạt Accuracy thấp nhất. Tuy nhiên, một số mô hình đơn giản như Logistic Regression hay KNN vẫn có Precision tương đối cao, nghĩa là khi đã dự đoán dương tính thì thường đúng, nhưng Recall thấp cho thấy bỏ sót khá nhiều trường hợp khách hàng thực sự đăng ký.
+
+\hspace{0.5cm} Vì tất cả mô hình đều sử dụng cùng một tập 36 đặc trưng, sự khác biệt chủ yếu đến từ khả năng mô hình hóa của từng thuật toán, và kết quả cho thấy các mô hình ensemble là lựa chọn phù hợp hơn cho bài toán này.
